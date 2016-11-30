@@ -1,0 +1,25 @@
+.App {
+  text-align: center;
+}
+
+.padding {
+  width: 70%;
+}
+
+.App-header {
+  padding: 20px;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+
+.v-buffer { margin-top:20px; margin-bottom:20px; }
+
+
+
+/*@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}*/
