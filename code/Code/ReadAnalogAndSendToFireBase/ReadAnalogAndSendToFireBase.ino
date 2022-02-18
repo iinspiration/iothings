@@ -25,9 +25,7 @@ Servo myservo;
 #define DEVICENAME "NodeMCUV2_01"
 #define FIREBASE_HOST "nodemcuthings.firebaseio.com"
 #define FIREBASE_AUTH "kSavdvK0yfm8dcsRtbc3iP4Mx3zP3nM6cmGGIcAG"
-//#define WIFI_SSID "Pichaya's iPhone"
-//#define WIFI_PASSWORD "pppppppp"
-#define WIFI_SSID "photocanvas.in.th"
+#define WIFI_SSID "photocanvas.in.th_2G"
 #define WIFI_PASSWORD "pichaya7831"
 
 
