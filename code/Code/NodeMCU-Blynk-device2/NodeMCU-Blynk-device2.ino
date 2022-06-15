@@ -28,7 +28,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 #define LIGHTPIN 5
 
-#define LED 2
+#define PUMP 2
 
 
 int tempValue = 0;
@@ -55,18 +55,19 @@ int pMoist = 0;
 const int dry = 4095;
 const int wet = 0;
 
-// This function is called every time the Virtual Pin 0 state changes
-//BLYNK_WRITE(V11)
-//{
-//  // Set incoming value from pin V0 to a variable
-//  int value = param.asInt();
-//
-//  // Update state
-////  Blynk.virtualWrite(V1, value);
-//  digitalWrite(LED,value);
-//  digitalWrite(13,value);
-//  Serial.println(value);
-//}
+// This function is called every time the Virtual Pin V11 state changes
+int value;
+BLYNK_WRITE(V11)
+{
+  // Set incoming value from pin V0 to a variable
+  value = param.asInt();
+
+  // Update state
+//  Blynk.virtualWrite(V1, value);
+  Blynk.logEvent("PUMP", "Water Pump Trigger");
+  digitalWrite(PUMP,0);
+  Serial.println(value);
+}
 
 
 void dhtSensor()
@@ -105,15 +106,49 @@ void moistSensor()
   
 }
 
+void switcher()
+{
+  int pumpStart = digitalRead(19);
+  int pumpRevert = digitalRead(33);
+  
+  if(pumpStart > 0){
+      Blynk.logEvent("PUMPSTART", "Water Pump Activate!");
+      Serial.println("PUMPSTART");
+      Blynk.virtualWrite(V12, 1);
+      digitalWrite(PUMP,0);
+      Blynk.virtualWrite(V13, 0);
+      pumpRevert = 0;
+    }
+  if(pumpRevert > 0){
+      Blynk.logEvent("PUMPREVERT", "Water Pump Revert Activate!");
+      Serial.println("PUMPREVERT");
+      Blynk.virtualWrite(V12, 0);
+      Blynk.virtualWrite(V13, 1);
+      pumpStart = 0;
+    }
+  if(pumpStart == 0 && pumpRevert == 0){
+      Blynk.virtualWrite(V12, 0);
+      Blynk.virtualWrite(V13, 0);
+      if(value == 0){
+        digitalWrite(PUMP,1);
+        }
+      
+    }
+}
+
+
 
 void setup() {
   Serial.begin(115200); 
-  pinMode(LED,OUTPUT);
-  pinMode(13,OUTPUT);
+  pinMode(PUMP,OUTPUT);
+  digitalWrite(PUMP,HIGH);
+  pinMode(19,INPUT);
+  pinMode(33,INPUT);
   Blynk.begin(auth, ssid, password);
   Blynk.notify("NodeMCU03 online");
   timer.setInterval(1000, dhtSensor);
-  timer.setInterval(1200, moistSensor);
+  timer.setInterval(1000, moistSensor);
+  timer.setInterval(100, switcher);
 }
 
 void loop() {

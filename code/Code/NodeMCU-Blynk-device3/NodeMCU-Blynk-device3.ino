@@ -28,7 +28,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 #define LIGHTPIN 5
 
-#define LED 2
+#define PUMP 2
 
 
 int tempValue = 0;
@@ -63,8 +63,9 @@ BLYNK_WRITE(V11)
 
   // Update state
 //  Blynk.virtualWrite(V1, value);
-  digitalWrite(LED,value);
-  digitalWrite(13,value);
+  Blynk.logEvent("PUMP", "Water Pump Trigger");
+  digitalWrite(PUMP,!value);
+  digitalWrite(13,!value);
   Serial.println(value);
 }
 
@@ -108,11 +109,13 @@ void moistSensor()
 
 void setup() {
   Serial.begin(115200); 
-  pinMode(LED,OUTPUT);
+  pinMode(PUMP,OUTPUT);
+  digitalWrite(PUMP,HIGH);
   pinMode(13,OUTPUT);
+  digitalWrite(13,HIGH);
   Blynk.begin(auth, ssid, password);
   Blynk.notify("NodeMCU03 online");
-  timer.setInterval(1000, dhtSensor);
+//  timer.setInterval(1000, dhtSensor);
 //  timer.setInterval(1200, moistSensor);
 }
 
